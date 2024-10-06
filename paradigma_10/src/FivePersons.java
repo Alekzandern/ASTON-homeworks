@@ -1,3 +1,4 @@
+// Создать массив из 5 сотрудников. (я так понял как 1 задание, только 5 сотрудников).
 public class FivePersons {
     public static void main(String[] args) {
         class Сотрудник {
