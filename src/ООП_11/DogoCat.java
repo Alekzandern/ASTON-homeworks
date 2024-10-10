@@ -83,7 +83,7 @@ public class DogoCat {
             }
         }
 
-        class Main {
+        class main {
             public static void main(String[] args) {
                 Dog dogBobik = new Dog();
                 dogBobik.run(150);

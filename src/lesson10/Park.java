@@ -1,39 +1,39 @@
-package paradigma_10;
+package lesson10;
 
-public class ThePark {
-        public static class Attraction {
+public class Park {
+        private static class Attraction {
             private String name;
             private String type;
             private String operatingHours;
             private double cost;
 
-            public Attraction(String name, String type, String operatingHours, double cost) {
+            private Attraction(String name, String type, String operatingHours, double cost) {
                 this.name = name;
                 this.type = type;
                 this.operatingHours = operatingHours;
                 this.cost = cost;
             }
 
-            public String getName() {
+            private String getName() {
                 return name;
             }
 
-            public String getType() {
+            private String getType() {
                 return type;
             }
 
-            public String getOperatingHours() {
+            private String getOperatingHours() {
                 return operatingHours;
             }
 
-            public double getCost() {
+            private double getCost() {
                 return cost;
             }
         }
 
         private Attraction[] attractions;
 
-        public ThePark(Attraction[] attractions) {
+        private Park(Attraction[] attractions) {
             this.attractions = attractions;
         }
 
@@ -57,7 +57,7 @@ public class ThePark {
             attractions[3] = new Attraction("Атракцион4", "4Атракцион", "11:00-17:00", 12.0);
             attractions[4] = new Attraction("Атракцион5", "5Атракцион", "12:00-16:00", 18.0);
 
-            ThePark park = new ThePark(attractions);
+            Park park = new Park(attractions);
             park.printAttractions();
         }
     }
