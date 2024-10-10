@@ -1,5 +1,9 @@
 package lesson10;
 
+// Задание 3
+//Создать класс Park с внутренним классом, с помощью объектов которого можно хранить
+//информацию об аттракционах, времени их работы и стоимости.
+
 public class Park {
         private static class Attraction {
             private String name;
