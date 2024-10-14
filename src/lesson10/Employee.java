@@ -1,5 +1,16 @@
 package lesson10;
 
+//Задание 2
+//Создать массив из 5 сотрудников.
+//Пример:
+//вначале объявляем массив объектов
+//Person[I persArray = new Person[5];
+// потом для каждой ячейки массива задаем объект
+//persArray[01 = new Person ("Ivanov Ivan", "Engineer",
+//"ivivan@mailbox.com", "892312312", 30000, 30);
+//persArray[1] = new Person(...);
+//persArray[4] = new Person(...);
+
 public class Employee {
     public static void main(String[] args) {
         class employee {
