@@ -1,4 +1,4 @@
-package lesson10;
+package main.java.lesson10;
 
 //Задание 2
 //Создать массив из 5 сотрудников.
