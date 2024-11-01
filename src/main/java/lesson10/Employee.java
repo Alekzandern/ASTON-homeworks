@@ -33,6 +33,7 @@ public class Employee {
     public static void main(String[] args) {
         Employee[] persArray = new Employee[5];
         for (int i = 0; i < persArray.length; i++) {
+            System.out.println("Сотрудник " + (i + 1));
         persArray[0] = new Employee("Иван", "Иванов", "Менеджер", "ivanov@.com", "+79123456790", 50000, 22);
         persArray[1] = new Employee("Петр", "Петров", "Инженер", "petrov@.com", "+79123456790", 40000, 33);
         persArray[2] = new Employee("Сидор", "Сидоров", "Специалист", "sidorov@.com", "+79123456791", 35000, 44);
@@ -99,7 +100,6 @@ public class Employee {
     }
 
     public void printInfo() {
-        System.out.println("Сотрудник " + (1));
         System.out.println("Имя: " + firstName);
         System.out.println("Фамилия: " + lastName);
         System.out.println("Должность: " + post);
