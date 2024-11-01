@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import static Lesson_14_testng.Factorial.factorial;
 import static org.testng.Assert.assertThrows;
 public class TestFactorial {
-    @Test
+    @org.junit.Test
     public void testFactorial_Positive_Number() {
         int number = 5;
         long expected = 120;
