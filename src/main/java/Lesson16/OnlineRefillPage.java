@@ -10,15 +10,20 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-class OnlineRefillPage {
+public class OnlineRefillPage {
 
+    private final String serviceTypeLocatorTemplate = "//*[@id=\"pay-section\"]/div/div/div[2]/section/div";
     private WebDriver driver;
     private WebDriverWait wait;
-    private final String serviceTypeLocatorTemplate = "//*[@id=\"pay-section\"]/div/div/div[2]/section/div";
 
     public OnlineRefillPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+
+    public void clickMoreDetailsLink() {
+        WebElement moreDetailsLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(), 'Подробнее о сервисе')]")));
+        moreDetailsLink.click();
     }
 
     public List<String> getServiceLabelsText() {

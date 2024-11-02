@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 import java.util.ArrayList;
 import java.util.List;
 
-class PaymentConfirmationPage {
+public class PaymentConfirmationPage {
 
     private WebDriver driver;
 

@@ -15,6 +15,7 @@ package Lesson16;
 //незаполненных полях для ввода реквизитов карты,
 //наличие иконок платёжных систем.
 
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -28,59 +29,78 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OnlineRefillTest {
 
     private WebDriver driver;
 
-    @BeforeEach
-    public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver-win64\\chromedriver.exe");
-        driver = new ChromeDriver();
-        driver.get("https://mts.by/");
-        // Подтверждение куки
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement cookieButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"cookie-agree\"]")));
-        cookieButton.click();
-    }
+    public static class MtsPageTest {
 
-    @Test
-    public void testOnlineRefill() {
-        OnlineRefillPage refillPage = new OnlineRefillPage(driver);
+        private WebDriver driver;
 
-        // 1. Проверка надписей в незаполненных полях
-        checkLabels(refillPage, "mobile", Arrays.asList("Номер телефона", "Сумма"));
-        checkLabels(refillPage, "home-internet", Arrays.asList("Номер лицевого счета", "Сумма"));
-        checkLabels(refillPage, "installment", Arrays.asList("Номер договора", "Сумма"));
-        checkLabels(refillPage, "debt", Arrays.asList("Номер телефона", "Сумма"));
+        @BeforeEach
+        public void setUp() {
+            System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver-win64\\chromedriver.exe");
+            driver = new ChromeDriver();
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver.get("https://mts.by/");
 
-        // 2. Проверка пополнения услуг связи
-        refillPage.selectServiceType("mobile");
-        refillPage.enterPhoneNumber("+375291234567");
-        refillPage.enterAmount("10");
-        refillPage.clickContinueButton();
+            // Подтверждение куки
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement cookieButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"cookie-agree\"]")));
+            cookieButton.click();
+        }
 
-        PaymentConfirmationPage confirmationPage = new PaymentConfirmationPage(driver);
+        @Test
+        public void testOnlineRefillMobile() {
+            OnlineRefillPage refillPage = new OnlineRefillPage(driver);
 
-        assertEquals("10.00 BYN", confirmationPage.getAmountText());
-        assertEquals("+375291234567", confirmationPage.getPhoneNumberText());
 
-        assertEquals("Номер карты", confirmationPage.getCardNumberInputPlaceholder());
-        assertEquals("Срок действия", confirmationPage.getCardExpirationDateInputPlaceholder());
-        assertEquals("CVV/CVC", confirmationPage.getCardCvvInputPlaceholder());
+            checkLabels(refillPage, "mobile", Arrays.asList("Номер телефона", "Сумма"));
 
-        List<String> icons = confirmationPage.getPaymentSystemIcons();
-        assertTrue(icons.contains("visa"));
-        assertTrue(icons.contains("mastercard"));
-    }
 
-    private void checkLabels(OnlineRefillPage refillPage, String serviceType, List<String> expectedLabels) {
-        refillPage.selectServiceType(serviceType);
-        List<String> actualLabels = refillPage.getServiceLabelsText();
-        for (String label : expectedLabels) {
-            assertTrue(actualLabels.contains(label), "Отсутствует надпись: " + label + " для типа услуги: " + serviceType);
+            refillPage.selectServiceType("mobile");
+            refillPage.enterPhoneNumber("+375297777777");
+            refillPage.enterAmount("10");
+            refillPage.clickContinueButton();
+
+            PaymentConfirmationPage confirmationPage = new PaymentConfirmationPage(driver);
+
+            Assert.assertEquals("10.00 BYN", confirmationPage.getAmountText());
+            Assert.assertEquals("+375297777777", confirmationPage.getPhoneNumberText());
+
+            Assert.assertEquals("Номер карты", confirmationPage.getCardNumberInputPlaceholder());
+            Assert.assertEquals("Срок действия", confirmationPage.getCardExpirationDateInputPlaceholder());
+            Assert.assertEquals("CVV/CVC", confirmationPage.getCardCvvInputPlaceholder());
+
+            List<String> icons = confirmationPage.getPaymentSystemIcons();
+            assertTrue(icons.contains("visa"));
+            assertTrue(icons.contains("mastercard"));
+
+            driver.navigate().back();
+
+
+            refillPage.clickMoreDetailsLink();
+            // проверка открывшейся страницы
+            assertTrue(driver.getCurrentUrl().contains("https://mts.by/personal/chastnym-klientam/denezhnye-perevody/onlayn-popolnenie"), "Неверный URL страницы 'Подробнее о сервисе'");
+        }
+
+        @Test
+        public void testOnlineRefillOtherServices() {
+            OnlineRefillPage refillPage = new OnlineRefillPage(driver);
+
+            checkLabels(refillPage, "home-internet", Arrays.asList("Номер лицевого счета", "Сумма"));
+            checkLabels(refillPage, "installment", Arrays.asList("Номер договора", "Сумма"));
+            checkLabels(refillPage, "debt", Arrays.asList("Номер телефона", "Сумма"));
+        }
+
+        private void checkLabels(OnlineRefillPage refillPage, String serviceType, List<String> expectedLabels) {
+            refillPage.selectServiceType(serviceType);
+            List<String> actualLabels = refillPage.getServiceLabelsText();
+            for (String label : expectedLabels) {
+                assertTrue(actualLabels.contains(label), "Отсутствует надпись: " + label + " для типа услуги: " + serviceType);
+            }
         }
     }
 }
