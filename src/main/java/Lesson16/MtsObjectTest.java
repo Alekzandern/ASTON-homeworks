@@ -39,11 +39,10 @@ class OnlineRefillTest {
     public void setUp() {
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver-win64\\chromedriver.exe");
         driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); // добавил неявное ожидание
         driver.get("https://mts.by/");
         // Подтверждение куки
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement cookieButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"cookie-agree\"]"))); // Локатор кнопки подтверждения куки
+        WebElement cookieButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"cookie-agree\"]")));
         cookieButton.click();
     }
 
