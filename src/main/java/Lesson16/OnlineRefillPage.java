@@ -14,7 +14,7 @@ class OnlineRefillPage {
 
     private WebDriver driver;
     private WebDriverWait wait;
-    private final String serviceTypeLocatorTemplate = "//div[contains(@class, 'payment-type__item') and contains(., '%s')]";
+    private final String serviceTypeLocatorTemplate = "//*[@id=\"pay-section\"]/div/div/div[2]/section/div";
 
     public OnlineRefillPage(WebDriver driver) {
         this.driver = driver;
@@ -22,7 +22,7 @@ class OnlineRefillPage {
     }
 
     public List<String> getServiceLabelsText() {
-        List<WebElement> labels = driver.findElements(By.cssSelector(".payment-form__label"));
+        List<WebElement> labels = driver.findElements(By.cssSelector("#pay-section > div > div > div.col-12.col-xl-8 > section > div > div.pay__form > div.select > div.select__wrapper > button"));
         List<String> labelsText = new ArrayList<>();
         for (WebElement label : labels) {
             labelsText.add(label.getText());
@@ -32,21 +32,21 @@ class OnlineRefillPage {
 
     public void selectServiceType(String serviceType) {
         String locator = String.format(serviceTypeLocatorTemplate, serviceType);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(locator))).click(); // Изменил проверку на visibilityOfElementLocated
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(locator))).click(); // проверка на visibilityOfElementLocated
     }
 
     public void enterPhoneNumber(String phoneNumber) {
-        WebElement input = driver.findElement(By.cssSelector("input[placeholder='Номер телефона']"));
+        WebElement input = driver.findElement(By.cssSelector("#connection-phone"));
         input.sendKeys(phoneNumber);
     }
 
     public void enterAmount(String amount) {
-        WebElement input = driver.findElement(By.cssSelector("input[placeholder='Сумма']"));
+        WebElement input = driver.findElement(By.xpath("//*[@id=\"connection-phone\"]"));
         input.sendKeys(amount);
     }
 
     public void clickContinueButton() {
-        WebElement button = driver.findElement(By.xpath("//button[contains(text(), 'Продолжить')]"));
+        WebElement button = driver.findElement(By.xpath("//*[@id=\"pay-connection\"]/button"));
         button.click();
     }
 }
