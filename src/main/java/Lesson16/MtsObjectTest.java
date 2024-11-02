@@ -17,8 +17,11 @@ package Lesson16;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -30,27 +33,31 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OnlineRefillTest {
 
+    private WebDriver driver;
+
     @BeforeEach
     public void setUp() {
-
+        System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver-win64\\chromedriver.exe");
+        driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); // добавил неявное ожидание
+        driver.get("https://mts.by/");
+        // Подтверждение куки
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement cookieButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"cookie-agree\"]"))); // Локатор кнопки подтверждения куки
+        cookieButton.click();
     }
 
     @Test
     public void testOnlineRefill() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver-win64\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        driver.get("https://mts.by/");
-
         OnlineRefillPage refillPage = new OnlineRefillPage(driver);
 
+        // 1. Проверка надписей в незаполненных полях
+        checkLabels(refillPage, "mobile", Arrays.asList("Номер телефона", "Сумма"));
+        checkLabels(refillPage, "home-internet", Arrays.asList("Номер лицевого счета", "Сумма"));
+        checkLabels(refillPage, "installment", Arrays.asList("Номер договора", "Сумма"));
+        checkLabels(refillPage, "debt", Arrays.asList("Номер телефона", "Сумма"));
 
-        List<String> mobileLabels = refillPage.getMobileServiceLabelsText();
-        for (String s : Arrays.asList("Номер телефона", "Сумма")) {
-            assertTrue(mobileLabels.contains(s));
-        }
-
+        // 2. Проверка пополнения услуг связи
         refillPage.selectServiceType("mobile");
         refillPage.enterPhoneNumber("+375291234567");
         refillPage.enterAmount("10");
@@ -61,13 +68,20 @@ class OnlineRefillTest {
         assertEquals("10.00 BYN", confirmationPage.getAmountText());
         assertEquals("+375291234567", confirmationPage.getPhoneNumberText());
 
-
         assertEquals("Номер карты", confirmationPage.getCardNumberInputPlaceholder());
+        assertEquals("Срок действия", confirmationPage.getCardExpirationDateInputPlaceholder());
+        assertEquals("CVV/CVC", confirmationPage.getCardCvvInputPlaceholder());
 
         List<String> icons = confirmationPage.getPaymentSystemIcons();
         assertTrue(icons.contains("visa"));
         assertTrue(icons.contains("mastercard"));
+    }
 
-        driver.quit();
+    private void checkLabels(OnlineRefillPage refillPage, String serviceType, List<String> expectedLabels) {
+        refillPage.selectServiceType(serviceType);
+        List<String> actualLabels = refillPage.getServiceLabelsText();
+        for (String label : expectedLabels) {
+            assertTrue(actualLabels.contains(label), "Отсутствует надпись: " + label + " для типа услуги: " + serviceType);
+        }
     }
 }
