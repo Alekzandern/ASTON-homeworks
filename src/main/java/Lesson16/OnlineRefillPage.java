@@ -6,28 +6,53 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OnlineRefillPage {
+class OnlineRefillPage {
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final String serviceTypeLocatorTemplate = "//*[@id=\"pay-section\"]/div/div/div[2]/section/div/h2";
 
-    private final String serviceTypeLocatorTemplate = "//*[@id=\"pay-section\"]/div/div/div[2]/section/div";
-    private WebDriver driver;
-    private WebDriverWait wait;
-
-    public OnlineRefillPage(WebDriver driver) {
+    public OnlineRefillPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = wait;
     }
 
-    public void clickMoreDetailsLink() {
-        WebElement moreDetailsLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(), 'Подробнее о сервисе')]")));
+    public List<String> getLabelsForServiceType(String serviceType) {
+        selectServiceType(serviceType);
+        return getServiceLabelsText();
+    }
+
+    public void fillRefillForm(String serviceType, String phoneNumber, String amount) {
+        selectServiceType(serviceType);
+        enterPhoneNumber(phoneNumber);
+        enterAmount(amount);
+        clickContinueButton();
+    }
+
+    public void clickMoreDetailsLink(By locator) {
+        WebElement moreDetailsLink = wait.until(ExpectedConditions.elementToBeClickable(locator));
         moreDetailsLink.click();
     }
 
-    public List<String> getServiceLabelsText() {
-        List<WebElement> labels = driver.findElements(By.cssSelector("#pay-section > div > div > div.col-12.col-xl-8 > section > div > div.pay__form > div.select > div.select__wrapper > button"));
+    private void selectServiceType(String serviceType) {
+        String locator = String.format(serviceTypeLocatorTemplate, serviceType);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(locator))).click();
+    }
+
+    private void enterPhoneNumber(String phoneNumber) {
+        WebElement input = driver.findElement(By.cssSelector("input[placeholder='Номер телефона']"));
+        input.sendKeys(phoneNumber);
+    }
+
+    private void enterAmount(String amount) {
+        WebElement input = driver.findElement(By.cssSelector("input[placeholder='Сумма']"));
+        input.sendKeys(amount);
+    }
+
+    private List<String> getServiceLabelsText() {
+        List<WebElement> labels = driver.findElements(By.cssSelector(".payment-form__label"));
         List<String> labelsText = new ArrayList<>();
         for (WebElement label : labels) {
             labelsText.add(label.getText());
@@ -35,23 +60,8 @@ public class OnlineRefillPage {
         return labelsText;
     }
 
-    public void selectServiceType(String serviceType) {
-        String locator = String.format(serviceTypeLocatorTemplate, serviceType);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(locator))).click(); // проверка на visibilityOfElementLocated
-    }
-
-    public void enterPhoneNumber(String phoneNumber) {
-        WebElement input = driver.findElement(By.cssSelector("#connection-phone"));
-        input.sendKeys(phoneNumber);
-    }
-
-    public void enterAmount(String amount) {
-        WebElement input = driver.findElement(By.xpath("//*[@id=\"connection-phone\"]"));
-        input.sendKeys(amount);
-    }
-
-    public void clickContinueButton() {
-        WebElement button = driver.findElement(By.xpath("//*[@id=\"pay-connection\"]/button"));
+    private void clickContinueButton() {
+        WebElement button = driver.findElement(By.xpath("//button[contains(text(), 'Продолжить')]"));
         button.click();
     }
 }

@@ -3,16 +3,18 @@ package Lesson16;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentConfirmationPage {
-
+class PaymentConfirmationPage {
     private WebDriver driver;
+    private WebDriverWait wait;
 
-    public PaymentConfirmationPage(WebDriver driver) {
+    public PaymentConfirmationPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
+        this.wait = wait;
     }
 
     public String getAmountText() {
