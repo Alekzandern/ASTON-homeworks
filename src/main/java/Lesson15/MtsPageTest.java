@@ -33,12 +33,12 @@ public class MtsPageTest {
     @BeforeEach
     public void setUp() {
         // Установка пути к драйверу Chrome
-                System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver-win64\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver-win64\\chromedriver.exe");
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.get("https://mts.by/");
 
-            }
+    }
 
     @AfterEach
     public void tearDown() {
@@ -77,6 +77,6 @@ public class MtsPageTest {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("cookie-button")));
         driver.findElement(By.id("cookie-button")).click();
 
-       wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".payment-form")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".payment-form")));
     }
 }

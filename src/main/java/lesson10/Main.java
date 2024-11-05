@@ -7,38 +7,22 @@ package lesson10;
 
 public class Main {
     public static void main(String[] args) {
-        class Employee {
-
-            private String firstName;
-            private String lastName;
-            private String post;
-            private String email;
-            private String tel;
-            private double salary;
-            private int age;
-
-            public Employee(String firstName, String lastName, String post, String email, String tel, int salary, int age) {
-                this.firstName = firstName;
-                this.lastName = lastName;
-                this.post = post;
-                this.email = email;
-                this.tel = tel;
-                this.salary = salary;
-                this.age = age;
-            }
-        }
-
-        Employee[] persArray = new Employee[1];
+        Park.Attraction[] attractions = new Park.Attraction[5];
+        attractions[0] = new Park.Attraction("Аттракцион1", "1Аттракцион", "9:00-19:00", 15.0);
+        attractions[1] = new Park.Attraction("Аттракцион2", "2Аттракцион", "9:00-20:00", 20.0);
+        attractions[2] = new Park.Attraction("Аттракцион3", "3Аттракцион", "10:00-18:00", 10.0);
+        attractions[3] = new Park.Attraction("Аттракцион4", "4Аттракцион", "11:00-17:00", 12.0);
+        attractions[4] = new Park.Attraction("Аттракцион5", "5Аттракцион", "12:00-16:00", 18.0);
+        Park park = new Park(attractions);
+        park.printAttractions();
+        Employee[] persArray = new Employee[5];
         persArray[0] = new Employee("Иван", "Иванов", "Менеджер", "ivanov@.com", "+79123456790", 50000, 22);
-        for (int i = 0; i < persArray.length; i++) {
-            System.out.println("Имя: " + persArray[i].firstName);
-            System.out.println("Фамилия: " + persArray[i].lastName);
-            System.out.println("Должность: " + persArray[i].post);
-            System.out.println("Email: " + persArray[i].email);
-            System.out.println("Телефон: " + persArray[i].tel);
-            System.out.println("Зарплата: " + persArray[i].salary);
-            System.out.println("Возраст: " + persArray[i].age);
-
+        persArray[1] = new Employee("Петр", "Петров", "Инженер", "petrov@.com", "+79123456790", 40000, 33);
+        persArray[2] = new Employee("Сидор", "Сидоров", "Специалист", "sidorov@.com", "+79123456791", 35000, 44);
+        persArray[3] = new Employee("Кузнец", "Кузнецов", "Специалист", "kuznetsov@.com", "+79123456792", 32000, 55);
+        persArray[4] = new Employee("Федор", "Федоров", "Менеджер", "Fedarov@.com", "+79123456793", 50000, 66);
+        for (Employee employee : persArray) {
+            employee.printInfo();
         }
     }
 }
